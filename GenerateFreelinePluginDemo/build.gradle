@@ -25,4 +25,14 @@ task uberjar(type: Jar) {
     manifest {
         attributes 'Main-Class': mainClassName
     }
+
 }
+
+// 将 sh 文件拷贝到指定目录
+task copyJarSH(type: Copy, dependsOn: uberjar) {
+    from 'src/main/resources/my_file'
+    into 'build/libs'
+}
+
+//copyJarSH.dependsOn uberjar
+uberjar.finalizedBy copyJarSH

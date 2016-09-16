@@ -42,11 +42,15 @@ findFile(dir, blackList)
 
 if (isDebug)
     println("时间差是:" + (System.currentTimeMillis() - pre))
-
-println "我需要的Application 路径是: $myApplicationPath"
-println "我找到我需要modle 目录下的build.gradle 文件了哈: $myModleBuildPath"
-println "我找到我需要root 目录下的build.gradle 文件了哈: $myRootBuildPath"
-
+println ""
+println ""
+println ""
+println "( ⊙o⊙ )哇 找到 Application 的路径: $myApplicationPath"
+println "( ⊙o⊙ )哇 找到 modle 目录下的build.gradle 文件路径: $myModleBuildPath"
+println "( ⊙o⊙ )哇 找到 root 目录下的build.gradle 文件路径: $myRootBuildPath"
+println ""
+println ""
+println ""
 /**
  * 递归查询文件
  * @param dir
@@ -166,7 +170,7 @@ def handleData = { String filePath, String addDataLine,
         def currentLine = list.get(i)
 
         if (currentLine.contains(addDataLine)) {
-            println "已经存在: $addDataLine"
+            println "-_-# 已经存在: $addDataLine"
 
             if (!haveFreeLine) {
                 haveFreeLine = true
@@ -191,7 +195,8 @@ def handleData = { String filePath, String addDataLine,
 
                     haveFreeLine = true
                     addLineCount = insertLine + 1
-                    println "添加数据成功, 当前插入行数是: $addLineCount"
+                    if (isDebug)
+                        println ":-> 添加数据成功, 当前插入行数是: $addLineCount"
                 } else {
                     haveFreeLine = true
                     line = currentLine
@@ -252,3 +257,11 @@ def modelBuildGradleFile = { String modelBuildGradleFilePath ->
 rootBuildFile(myRootBuildPath)
 modelApplicationFile(myApplicationPath)
 modelBuildGradleFile(myModleBuildPath)
+
+println ""
+println ""
+println ""
+println "~~~^_^~~~  已经将 Freeline 插入到项目中，请享受吧 ~~~^_^~~~ "
+println ""
+println ""
+println ""
