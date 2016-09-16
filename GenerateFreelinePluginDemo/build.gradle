@@ -16,7 +16,7 @@ dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.11'
 }
 
-mainClassName = 'Test'
+mainClassName = 'MainGroovy'
 
 task uberjar(type: Jar) {
     from files(sourceSets.main.output.classesDir)
