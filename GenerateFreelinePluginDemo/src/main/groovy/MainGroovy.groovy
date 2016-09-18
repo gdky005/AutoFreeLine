@@ -306,13 +306,25 @@ private void preLog(boolean isDebug, long pre, String myApplicationPath, String 
 }
 
 /**
+ * 判断字符串是否为空
+ * @param str
+ * @return
+ */
+private boolean isEmpty(String str) {
+    if (str == null || str.length() == 0)
+        return true;
+    else
+        return false;
+}
+
+/**
  * 结束的 log
  */
 private void endLog() {
     println ""
     println ""
     println ""
-    println "~~~^_^~~~  已经将 Freeline 插入到项目中，请享受吧 ~~~^_^~~~ "
+    println "~~~^_^~~~  已经将 Freeline 插入到项目中，请享用吧 ~~~^_^~~~ "
     println ""
     println ""
     println ""
@@ -363,6 +375,7 @@ if (isEmpty(myApplicationPath) || isEmpty(myModleBuildPath) || isEmpty(myRootBui
     println "sorry, 查找项目失败，不能正确配置 freeline，请根据以上 log 查看是否有地方配置错误，更正后，请重试，谢谢！"
     return
 }
+println "查找文件 成功"
 
 preLog(isDebug, pre, myApplicationPath, myModleBuildPath, myRootBuildPath)
 
@@ -370,12 +383,11 @@ rootBuildFile(myRootBuildPath)
 modelApplicationFile(myApplicationPath)
 modelBuildGradleFile(myModleBuildPath)
 
+
+
+println "开始执行命令：gradle initFreeline -Pmirror, 请耐心等待一小会，就会完成。莫要着急哦"
+def cmd = "gradle initFreeline -Pmirror"
+println cmd.execute().text
+println "初始化 freeline 成功，请使用 python freeline.py 运行项目。 或者可以使用插件运行"
+
 endLog()
-
-
-private boolean isEmpty(String str) {
-    if (str == null || str.length() == 0)
-        return true;
-    else
-        return false;
-}
