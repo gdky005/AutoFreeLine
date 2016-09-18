@@ -235,7 +235,7 @@ def handleData = { String filePath, String addDataLine,
  * 给根目录下的build.gradle 文件插入相关数据
  */
 def rootBuildFile = { String rootBuildFilePath ->
-    String classpathKeyword = "classpath 'com.antfortune.freeline:gradle:0.5.5'"
+    String classpathKeyword = "classpath 'com.antfortune.freeline:gradle:0.6.0'"
     handleData(rootBuildFilePath, classpathKeyword, "dependencies", "classpath", false)
 }
 
@@ -253,7 +253,7 @@ def modelApplicationFile = { String modelApplicationFilePath ->
  * 插入 model 的依赖
  */
 def modelBuildGradleFile = { String modelBuildGradleFilePath ->
-    def compileKeword = "compile 'com.antfortune.freeline:runtime:0.5.5'"
+    def compileKeword = "compile 'com.antfortune.freeline:runtime:0.6.0'"
     handleData(modelBuildGradleFilePath, compileKeword, "dependencies", "compile fileTree", false)
 
     //在 model 里面插入需要的代码
@@ -384,10 +384,21 @@ modelApplicationFile(myApplicationPath)
 modelBuildGradleFile(myModleBuildPath)
 
 
+endLog()
 
-println "开始执行命令：gradle initFreeline -Pmirror, 请耐心等待一小会，就会完成。莫要着急哦"
+
+println "开始执行命令：gradle initFreeline -Pmirror。 客官，莫要着急哦，请耐心等待一小会，就会完成。"
 def cmd = "gradle initFreeline -Pmirror"
 println cmd.execute().text
-println "初始化 freeline 成功，请使用 python freeline.py 运行项目。 或者可以使用插件运行"
 
-endLog()
+
+def warningText = '''
+温馨提示：
+
+
+
+
+如果提示 BUILD FAILED ，请使用 gradle initFreeline -Pmirror 或者 gradle initFreeline 再次运行一次即可。
+如果提示 BUILD SUCCESSFUL ，表示初始化 freeline 成功，请使用 python freeline.py 运行项目。 或者可以使用插件运行
+'''
+println warningText
