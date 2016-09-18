@@ -338,7 +338,8 @@ try {
     dirBlackList = localProperties(excludeDirFile)
 } catch (Exception e) {
     println "（可以忽略）读取配置文件失败，请在当前文件目录放入 exclude_dir.properties (没有请自建文件)文件，并在里面写入需要忽略的文件，否则会使用默认忽略配置属性"
-    dirBlackList = getBlackList()
+} finally {
+    dirBlackList.addAll(getBlackList())
 }
 
 long pre = System.currentTimeMillis()
