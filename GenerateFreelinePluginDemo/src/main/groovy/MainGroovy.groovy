@@ -375,7 +375,8 @@ if (isEmpty(myApplicationPath) || isEmpty(myModleBuildPath) || isEmpty(myRootBui
     println "sorry, 查找项目失败，不能正确配置 freeline，请根据以上 log 查看是否有地方配置错误，更正后，请重试，谢谢！"
     return
 }
-println "查找文件 成功"
+if (isDebug)
+    println "查找文件 成功"
 
 preLog(isDebug, pre, myApplicationPath, myModleBuildPath, myRootBuildPath)
 
@@ -395,10 +396,9 @@ println cmd.execute().text
 def warningText = '''
 温馨提示：
 
+    ~~~^_^~~~
 
-
-
-如果提示 BUILD FAILED ，请使用 gradle initFreeline -Pmirror 或者 gradle initFreeline 再次运行一次即可。
-如果提示 BUILD SUCCESSFUL ，表示初始化 freeline 成功，请使用 python freeline.py 运行项目。 或者可以使用插件运行
+如果提示 BUILD FAILED ，         %>_<%   请使用 gradle initFreeline -Pmirror 或者 gradle initFreeline 再次运行一次即可。
+如果提示 BUILD SUCCESSFUL ，     #^_^#   表示初始化 freeline 成功，请使用 python freeline.py 运行项目。 或者可以使用插件运行
 '''
 println warningText
