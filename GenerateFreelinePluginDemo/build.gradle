@@ -34,5 +34,11 @@ task copyJarSH(type: Copy, dependsOn: uberjar) {
     into 'build/libs'
 }
 
+task copyExclude(type: Copy, dependsOn: uberjar) {
+    from 'src/main/resources/exclude'
+    into 'build/libs'
+}
+
 //copyJarSH.dependsOn uberjar
 uberjar.finalizedBy copyJarSH
+uberjar.finalizedBy copyExclude

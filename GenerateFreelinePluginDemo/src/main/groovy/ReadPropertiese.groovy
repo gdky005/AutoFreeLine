@@ -33,7 +33,7 @@ println "输出结果是："
 def propertyMap = { String configFile ->
     InputStream inputStream;
     if (isRunJar) {
-        String proFilePath = path + "/" + configFile;
+        String proFilePath = path + "/exclude/" + configFile;
         inputStream = new BufferedInputStream(new FileInputStream(proFilePath));
     } else {
         inputStream = getClass().getResourceAsStream(configFile)
