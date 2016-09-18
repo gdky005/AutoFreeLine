@@ -262,6 +262,20 @@ def modelBuildGradleFile = { String modelBuildGradleFilePath ->
         hack true
     }
     '''
+    //专门针对聚美
+//    def freelineKeword = '''
+//    def flavor = "jmtest"
+//
+//    version = android.defaultConfig.versionCode
+//
+//    freeline {
+//        productFlavor flavor
+//        hack true
+//
+//        def dir = System.getProperty("user.dir");
+//        apkPath dir + "/ExportApks/"+ flavor + "_" + version + ".apk"
+//    }
+//    '''
     handleData(modelBuildGradleFilePath, freelineKeword, "apply plugin", "android {", false)
 
     //在modle 的依赖中添加 apply 插件
@@ -333,7 +347,7 @@ println "当前项目的真实路径是： $rootPath"
 File dir = new File(rootPath)
 rootParentName = dir.getName()
 
-ArrayList dirBlackList
+ArrayList dirBlackList = new ArrayList()
 try {
     dirBlackList = localProperties(excludeDirFile)
 } catch (Exception e) {
