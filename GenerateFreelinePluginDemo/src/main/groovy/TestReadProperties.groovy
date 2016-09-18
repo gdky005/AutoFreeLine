@@ -11,22 +11,6 @@ def path = System.getProperty("user.dir")
 def configFile = "my.properties"
 InputStream inputStream;
 
-File tempFile = new File("test.test")
-
-if (tempFile.exists())
-    tempFile.delete()
-
-if (!tempFile.exists()) {
-    tempFile.createNewFile()
-    String parentPath = tempFile.getAbsolutePath()
-
-    parentPath = parentPath.substring(0, parentPath.indexOf(tempFile.getName()))
-
-    println "临时文件的地址" + parentPath
-    tempFile.delete()
-}
-
-
 println "当前运行文件的路径是：" + path
 println ""
 println ""
