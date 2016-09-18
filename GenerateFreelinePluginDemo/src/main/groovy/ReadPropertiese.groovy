@@ -9,10 +9,10 @@ def path = System.getProperty("user.dir")
 
 def myConfigFile = "my.properties"
 def excludeDirFile = "exclude_dir.properties"
-def excludeRegexpFile = "exclude_regexp_file_name.properties"
+def excludeRegexpFile = "exclude_file_name.properties"
 
 /* 配置文件 */
-def config = excludeRegexpFile
+def config = excludeDirFile
 
 println "当前运行文件的路径是：" + path
 println ""

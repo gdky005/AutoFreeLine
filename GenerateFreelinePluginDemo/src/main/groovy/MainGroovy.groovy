@@ -12,10 +12,11 @@ import groovy.transform.Field
  *
  * Created by WangQing on 16/9/16.
  */
-def rootPath = "/Users/WangQing/Android_Pro/JuMeiYouPin_Pro/TestFreelineAndroidDemo"
+//def rootPath = "/Users/WangQing/Android_Pro/JuMeiYouPin_Pro/TestFreelineAndroidDemo"
+def rootPath = ""
 
 @Field
-CharSequence myApplication = "MyApplication.java"
+CharSequence myApplication = "Application.java"
 @Field
 def modeBuild = "build.gradle"
 @Field
@@ -28,29 +29,36 @@ CharSequence myModleBuildPath = ""
 CharSequence myRootBuildPath = ""
 @Field
 boolean isDebug = false
+/**
+ * 当前运行路径
+ */
+@Field
+String currentPath = System.getProperty("user.dir")
 
+def excludeDirFile = "exclude_dir.properties"
+def proPathFile = "your_pro_path.properties"
+def debugPathFile = "debug.properties"
 
+/**
+ * 读取配置文件
+ */
+def localProperties = { String configFile ->
+    String proFilePath = currentPath + "/" + configFile;
+    InputStream inputStream = new BufferedInputStream(new FileInputStream(proFilePath));
+    ResourceBundle property = new PropertyResourceBundle(inputStream);
+    Set set = property.keySet()
 
-File dir = new File(rootPath)
+    List list = new ArrayList();
+    list.addAll(set)
 
-rootParentName = dir.getName()
+    if (isDebug) {
+        for (String item : list) {
+            println "当前过滤的内容：$item"
+        }
+    }
+    list
+}
 
-ArrayList blackList = getBlackList()
-
-long pre = System.currentTimeMillis()
-findFile(dir, blackList)
-
-if (isDebug)
-    println("时间差是:" + (System.currentTimeMillis() - pre))
-println ""
-println ""
-println ""
-println "( ⊙o⊙ )哇 找到 Application 的路径: $myApplicationPath"
-println "( ⊙o⊙ )哇 找到 modle 目录下的build.gradle 文件路径: $myModleBuildPath"
-println "( ⊙o⊙ )哇 找到 root 目录下的build.gradle 文件路径: $myRootBuildPath"
-println ""
-println ""
-println ""
 /**
  * 递归查询文件
  * @param dir
@@ -83,7 +91,7 @@ void findFile(File dir, ArrayList blackList) {
         //查找子build文件
         if (name.equalsIgnoreCase(modeBuild)) {
             def parentName = new File(dir.getParent()).getName()
-            if (!parentName.equalsIgnoreCase(rootParentName)){
+            if (!parentName.equalsIgnoreCase(rootParentName)) {
                 myModleBuildPath = path
             } else {
                 myRootBuildPath = path
@@ -114,6 +122,7 @@ private ArrayList getBlackList() {
     blackList.add("res")
     blackList.add(".git")
     blackList.add(".gitignore")
+
     blackList
 }
 
@@ -222,13 +231,17 @@ def handleData = { String filePath, String addDataLine,
 
 }
 
-//给根目录下的build.gradle 文件插入相关数据
+/**
+ * 给根目录下的build.gradle 文件插入相关数据
+ */
 def rootBuildFile = { String rootBuildFilePath ->
     String classpathKeyword = "classpath 'com.antfortune.freeline:gradle:0.5.5'"
     handleData(rootBuildFilePath, classpathKeyword, "dependencies", "classpath", false)
 }
 
-//给Application添加
+/**
+ * 给Application添加
+ */
 def modelApplicationFile = { String modelApplicationFilePath ->
     def initKeyword = "FreelineCore.init(this);"
     handleData(modelApplicationFilePath, initKeyword, "onCreate()", "super.onCreate()", false)
@@ -236,7 +249,9 @@ def modelApplicationFile = { String modelApplicationFilePath ->
     handleData(modelApplicationFilePath, importKeyword, "package", "import", false)
 }
 
-//插入 model 的依赖
+/**
+ * 插入 model 的依赖
+ */
 def modelBuildGradleFile = { String modelBuildGradleFilePath ->
     def compileKeword = "compile 'com.antfortune.freeline:runtime:0.5.5'"
     handleData(modelBuildGradleFilePath, compileKeword, "dependencies", "compile fileTree", false)
@@ -254,14 +269,98 @@ def modelBuildGradleFile = { String modelBuildGradleFilePath ->
     handleData(modelBuildGradleFilePath, applyKeword, "apply plugin", "android {", true)
 }
 
+/**
+ * 开始的 log
+ * @param isDebug
+ * @param pre
+ * @param myApplicationPath
+ * @param myModleBuildPath
+ * @param myRootBuildPath
+ */
+private void preLog(boolean isDebug, long pre, String myApplicationPath, String myModleBuildPath, String myRootBuildPath) {
+    if (isDebug)
+        println("时间差是:" + (System.currentTimeMillis() - pre))
+    println ""
+    println ""
+    println ""
+    println "( ⊙o⊙ )哇 找到 Application 的路径: $myApplicationPath"
+    println "( ⊙o⊙ )哇 找到 modle 目录下的build.gradle 文件路径: $myModleBuildPath"
+    println "( ⊙o⊙ )哇 找到 root 目录下的build.gradle 文件路径: $myRootBuildPath"
+    println ""
+    println ""
+    println ""
+}
+
+/**
+ * 结束的 log
+ */
+private void endLog() {
+    println ""
+    println ""
+    println ""
+    println "~~~^_^~~~  已经将 Freeline 插入到项目中，请享受吧 ~~~^_^~~~ "
+    println ""
+    println ""
+    println ""
+}
+
+/**
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * ~~~~~~~~~~~~~~~ Main 代码 ~~~~~~~~~~~~~~
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ */
+
+try {
+    String path = localProperties(debugPathFile).get(0)
+    isDebug = path.contains("true")
+    println "欢迎使用 freeline 快速集成脚本, 这是 Debug 版本，可以根据下面的提示信息进行调试。"
+} catch (Exception e) {
+    println "欢迎使用 freeline 快速集成脚本"
+    isDebug = false
+}
+
+
+
+try {
+    String path = localProperties(proPathFile).get(0)
+    rootPath = path.trim()
+} catch (Exception e) {
+    println "读取配置文件失败，请在当前文件目录放入 your_pro_path.properties(没有请自建文件) 文件，并在里面写入当前项目的绝对路径，否则将会自动寻找项目路径（比较重要，如果不配置项目地址，请把这些文件放在你的项目的跟目录下面）"
+    rootPath = currentPath
+}
+println "当前项目的真实路径是： $rootPath"
+
+File dir = new File(rootPath)
+rootParentName = dir.getName()
+
+ArrayList dirBlackList
+try {
+    dirBlackList = localProperties(excludeDirFile)
+} catch (Exception e) {
+    println "（可以忽略）读取配置文件失败，请在当前文件目录放入 exclude_dir.properties (没有请自建文件)文件，并在里面写入需要忽略的文件，否则会使用默认忽略配置属性"
+    dirBlackList = getBlackList()
+}
+
+long pre = System.currentTimeMillis()
+findFile(dir, dirBlackList)
+
+if (isEmpty(myApplicationPath) || isEmpty(myModleBuildPath) || isEmpty(myRootBuildPath)) {
+    println "sorry, 查找项目失败，不能正确配置 freeline，请根据以上 log 查看是否有地方配置错误，更正后，请重试，谢谢！"
+    return
+}
+
+preLog(isDebug, pre, myApplicationPath, myModleBuildPath, myRootBuildPath)
+
 rootBuildFile(myRootBuildPath)
 modelApplicationFile(myApplicationPath)
 modelBuildGradleFile(myModleBuildPath)
 
-println ""
-println ""
-println ""
-println "~~~^_^~~~  已经将 Freeline 插入到项目中，请享受吧 ~~~^_^~~~ "
-println ""
-println ""
-println ""
+endLog()
+
+
+private boolean isEmpty(String str) {
+    if (str == null || str.length() == 0)
+        return true;
+    else
+        return false;
+}
