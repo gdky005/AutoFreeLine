@@ -30,7 +30,7 @@ task uberjar(type: Jar) {
 
 // 将 sh 文件拷贝到指定目录
 task copyJarSH(type: Copy, dependsOn: uberjar) {
-    from 'src/main/resources/my_file'
+    from 'src/main/resources/shell_script'
     into 'build/libs'
 }
 
