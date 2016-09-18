@@ -11,7 +11,8 @@ def myConfigFile = "my.properties"
 def excludeDirFile = "exclude_dir.properties"
 def excludeRegexpFile = "exclude_regexp_file_name.properties"
 
-//configFile = excludeDirFile
+/* 配置文件 */
+def config = excludeRegexpFile
 
 println "当前运行文件的路径是：" + path
 println ""
@@ -42,6 +43,24 @@ def propertyMap = { String configFile ->
     property
 }
 
-ResourceBundle resourceBundle = propertyMap(myConfigFile)
-String name = resourceBundle.getString("name");
-println name
+ResourceBundle resourceBundle = propertyMap(config)
+Set set = resourceBundle.keySet()
+
+List list = new ArrayList();
+list.addAll(set)
+
+for(String s : list){
+    println s
+}
+
+
+//Enumeration keys = resourceBundle.keys
+//List list = keys.toList();
+//for (int i = 0; i < list.size(); i++) {
+//
+//}
+//
+//println "hello"
+
+//String name = resourceBundle.getString("age");
+//println name
