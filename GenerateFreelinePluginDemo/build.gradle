@@ -32,13 +32,14 @@ task uberjar(type: Jar) {
 task copyJarSH(type: Copy, dependsOn: uberjar) {
     from 'src/main/resources/shell_script'
     into 'build/libs'
+
+    from 'src/main/resources/exclude_jumei'
+    into 'build/libs'
+
+    from 'build/libs'
+    into '/Users/WangQing/Android_Pro/JuMei/mobile_android/JuMeiYouPin'
+
 }
 
-//task copyExclude(type: Copy, dependsOn: uberjar) {
-//    from 'src/main/resources/exclude'
-//    into 'build/libs'
-//}
-
-//copyJarSH.dependsOn uberjar
 uberjar.finalizedBy copyJarSH
-//uberjar.finalizedBy copyExclude
+
