@@ -267,17 +267,17 @@ def modelBuildGradleFile = { String modelBuildGradleFilePath ->
     def freelineKeword = '''
     def flavorName = "jmtest"
 
-    version = android.defaultConfig.versionCode
+    def apkVersionCode = android.defaultConfig.versionCode
 
     freeline {
-        productFlavor flavor
+        productFlavor flavorName
         hack true
 
         def dir = System.getProperty("user.dir");
-        apkPath dir + "/ExportApks/"+ flavorName + "_" + version + ".apk"
+        apkPath dir + "/ExportApks/"+ flavorName + "_" + apkVersionCode + ".apk"
     }
     '''
-    handleData(modelBuildGradleFilePath, freelineKeword, "android {", "Properties properties = new Properties()", true)
+    handleData(modelBuildGradleFilePath, freelineKeword, "useLibrary", "}", true)
 
     //在modle 的依赖中添加 apply 插件
     def applyKeword = "apply plugin: 'com.antfortune.freeline'"
@@ -295,15 +295,12 @@ def modelBuildGradleFile = { String modelBuildGradleFilePath ->
 private void preLog(boolean isDebug, long pre, String myApplicationPath, String myModleBuildPath, String myRootBuildPath) {
     if (isDebug)
         println("时间差是:" + (System.currentTimeMillis() - pre))
-    println ""
-    println ""
-    println ""
-    println "( ⊙o⊙ )哇 找到 Application 的路径: $myApplicationPath"
-    println "( ⊙o⊙ )哇 找到 modle 目录下的build.gradle 文件路径: $myModleBuildPath"
-    println "( ⊙o⊙ )哇 找到 root 目录下的build.gradle 文件路径: $myRootBuildPath"
-    println ""
-    println ""
-    println ""
+
+    println '   ------------------------------------------------------------------------------------------------'
+    println '       ( ⊙o⊙ )哇 找到 Application 的路径: $myApplicationPath'
+    println '       ( ⊙o⊙ )哇 找到 modle 目录下的build.gradle 文件路径: $myModleBuildPath'
+    println '       ( ⊙o⊙ )哇 找到 root 目录下的build.gradle 文件路径: $myRootBuildPath'
+    println '   ------------------------------------------------------------------------------------------------'
 }
 
 /**
@@ -322,13 +319,13 @@ private boolean isEmpty(String str) {
  * 结束的 log
  */
 private void endLog() {
-    println ""
-    println ""
-    println ""
-    println "~~~^_^~~~  已经将 Freeline 插入到项目中，请享用吧 ~~~^_^~~~ "
-    println ""
-    println ""
-    println ""
+    println '''
+
+    ------------------------------------------------------------------------------------------------
+        ~~~^_^~~~  已经将 Freeline 插入到项目中，请享用吧 ~~~^_^~~~
+    ------------------------------------------------------------------------------------------------
+
+    '''
 }
 
 /**
@@ -340,9 +337,17 @@ private void endLog() {
 try {
     String path = localProperties(debugPathFile).get(0)
     isDebug = path.contains("true")
-    println "欢迎使用 freeline 快速集成脚本, 这是 Debug 版本，可以根据下面的提示信息进行调试。"
+    println '''
+    ------------------------------------------------------------------------------------------------
+        欢迎使用 freeline 快速集成脚本, 这是 Debug 版本，可以根据下面的提示信息进行调试。
+    ------------------------------------------------------------------------------------------------
+    '''
 } catch (Exception e) {
-    println "欢迎使用 freeline 快速集成脚本"
+    println '''
+    ------------------------------------------------------------------------------------------------
+        欢迎使用 freeline 快速集成脚本
+    ------------------------------------------------------------------------------------------------
+    '''
     isDebug = false
 }
 
@@ -352,10 +357,19 @@ try {
     String path = localProperties(proPathFile).get(0)
     rootPath = path.trim()
 } catch (Exception e) {
-    println "读取配置文件失败，请在当前文件目录放入 your_pro_path.properties(没有请自建文件) 文件，并在里面写入当前项目的绝对路径，否则将会自动寻找项目路径（比较重要，如果不配置项目地址，请把这些文件放在你的项目的跟目录下面）"
+    println '''
+    ------------------------------------------------------------------------------------------------
+        读取配置文件失败，请在当前文件目录放入 your_pro_path.properties(没有请自建文件) 文件，
+        在里面写入当前项目的绝对路径，否则将会自动寻找项目路径
+        （比较重要，如果不配置项目地址，请把这些文件放在你的项目的跟目录下面）
+    ------------------------------------------------------------------------------------------------
+    '''
     rootPath = currentPath
 }
-println "当前项目的真实路径是： $rootPath"
+
+println "   ------------------------------------------------------------------------------------------------"
+println "       当前项目的真实路径是： $rootPath"
+println "   ------------------------------------------------------------------------------------------------"
 
 File dir = new File(rootPath)
 rootParentName = dir.getName()
@@ -364,7 +378,15 @@ ArrayList dirBlackList = new ArrayList()
 try {
     dirBlackList = localProperties(excludeDirFile)
 } catch (Exception e) {
-    println "（可以忽略）读取配置文件失败，请在当前文件目录放入 exclude_dir.properties (没有请自建文件)文件，并在里面写入需要忽略的文件，否则会使用默认忽略配置属性"
+
+
+    println '''
+    ------------------------------------------------------------------------------------------------
+        （可以忽略）
+        读取配置文件失败，请在当前文件目录放入 exclude_dir.properties (没有请自建文件)文件，
+        并在里面写入需要忽略的文件，否则会使用默认忽略配置属性
+    ------------------------------------------------------------------------------------------------
+    '''
 } finally {
     dirBlackList.addAll(getBlackList())
 }
@@ -388,18 +410,28 @@ modelBuildGradleFile(myModleBuildPath)
 
 endLog()
 
+println '''
+    ------------------------------------------------------------------------------------------------
+        开始执行命令：gradle initFreeline -Pmirror。 客官，莫要着急哦，请耐心等待一小会，就会完成。
+    ------------------------------------------------------------------------------------------------
+'''
 
-println "开始执行命令：gradle initFreeline -Pmirror。 客官，莫要着急哦，请耐心等待一小会，就会完成。"
+println ""
 def cmd = "gradle initFreeline -Pmirror"
 println cmd.execute().text
 
 
 def warningText = '''
-温馨提示：
+    ------------------------------------------------------------------------------------------------
+                                        温馨提示：
 
-    ~~~^_^~~~
 
-如果提示 BUILD FAILED ，         %>_<%   请使用 gradle initFreeline -Pmirror 或者 gradle initFreeline 再次运行一次即可。
-如果提示 BUILD SUCCESSFUL ，     #^_^#   表示初始化 freeline 成功，请使用 python freeline.py 运行项目。 或者可以使用插件运行
+                                        ~~~^_^~~~
+
+
+
+        如果提示 BUILD FAILED ，         %>_<%   请使用 gradle initFreeline -Pmirror 或者 gradle initFreeline 再次运行一次即可。
+        如果提示 BUILD SUCCESSFUL ，     #^_^#   表示初始化 freeline 成功，请使用 python freeline.py 运行项目。 或者可以使用插件运行
+    ------------------------------------------------------------------------------------------------
 '''
 println warningText
