@@ -265,7 +265,7 @@ def modelBuildGradleFile = { String modelBuildGradleFilePath ->
 
 //    //专门针对聚美
     def freelineKeword = '''
-    def flavor = "jmtest"
+    def flavorName = "jmtest"
 
     version = android.defaultConfig.versionCode
 
@@ -274,10 +274,10 @@ def modelBuildGradleFile = { String modelBuildGradleFilePath ->
         hack true
 
         def dir = System.getProperty("user.dir");
-        apkPath dir + "/ExportApks/"+ flavor + "_" + version + ".apk"
+        apkPath dir + "/ExportApks/"+ flavorName + "_" + version + ".apk"
     }
     '''
-    handleData(modelBuildGradleFilePath, freelineKeword, "apply plugin", "android {", false)
+    handleData(modelBuildGradleFilePath, freelineKeword, "android {", "Properties properties = new Properties()", true)
 
     //在modle 的依赖中添加 apply 插件
     def applyKeword = "apply plugin: 'com.antfortune.freeline'"
@@ -388,18 +388,18 @@ modelBuildGradleFile(myModleBuildPath)
 
 endLog()
 
-//
-//println "开始执行命令：gradle initFreeline -Pmirror。 客官，莫要着急哦，请耐心等待一小会，就会完成。"
-//def cmd = "gradle initFreeline -Pmirror"
-//println cmd.execute().text
-//
-//
-//def warningText = '''
-//温馨提示：
-//
-//    ~~~^_^~~~
-//
-//如果提示 BUILD FAILED ，         %>_<%   请使用 gradle initFreeline -Pmirror 或者 gradle initFreeline 再次运行一次即可。
-//如果提示 BUILD SUCCESSFUL ，     #^_^#   表示初始化 freeline 成功，请使用 python freeline.py 运行项目。 或者可以使用插件运行
-//'''
-//println warningText
+
+println "开始执行命令：gradle initFreeline -Pmirror。 客官，莫要着急哦，请耐心等待一小会，就会完成。"
+def cmd = "gradle initFreeline -Pmirror"
+println cmd.execute().text
+
+
+def warningText = '''
+温馨提示：
+
+    ~~~^_^~~~
+
+如果提示 BUILD FAILED ，         %>_<%   请使用 gradle initFreeline -Pmirror 或者 gradle initFreeline 再次运行一次即可。
+如果提示 BUILD SUCCESSFUL ，     #^_^#   表示初始化 freeline 成功，请使用 python freeline.py 运行项目。 或者可以使用插件运行
+'''
+println warningText
