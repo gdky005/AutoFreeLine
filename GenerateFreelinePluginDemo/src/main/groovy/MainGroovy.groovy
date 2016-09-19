@@ -262,7 +262,8 @@ def modelBuildGradleFile = { String modelBuildGradleFilePath ->
         hack true
     }
     '''
-    //专门针对聚美
+
+//    //专门针对聚美
 //    def freelineKeword = '''
 //    def flavor = "jmtest"
 //
