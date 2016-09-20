@@ -28,6 +28,8 @@ CharSequence myModleBuildPath = ""
 @Field
 CharSequence myRootBuildPath = ""
 @Field
+CharSequence freelineChar = "com.antfortune.freeline"
+@Field
 boolean isDebug = false
 /**
  * 当前运行路径
@@ -194,7 +196,8 @@ def handleData = { String filePath, String addDataLine,
 
                 line = list.get(insertLine - 1)
 
-                if (!line.contains(addDataLine)) {
+//                && !currentLine.contains(freelineChar)  可以保留之前的，新的不加入
+                if (!line.contains(addDataLine) ) {
 
                     int index = line.indexOf(checkKeyword)
                     if (index >= 0) space = line.substring(0, index);
@@ -235,7 +238,7 @@ def handleData = { String filePath, String addDataLine,
  * 给根目录下的build.gradle 文件插入相关数据
  */
 def rootBuildFile = { String rootBuildFilePath ->
-    String classpathKeyword = "classpath 'com.antfortune.freeline:gradle:0.6.0'"
+    String classpathKeyword = "classpath 'com.antfortune.freeline:gradle:0.6.3'"
     handleData(rootBuildFilePath, classpathKeyword, "dependencies", "classpath", false)
 }
 
@@ -253,35 +256,28 @@ def modelApplicationFile = { String modelApplicationFilePath ->
  * 插入 model 的依赖
  */
 def modelBuildGradleFile = { String modelBuildGradleFilePath ->
-    def compileKeword = "compile 'com.antfortune.freeline:runtime:0.6.0'"
-    handleData(modelBuildGradleFilePath, compileKeword, "dependencies", "compile fileTree", false)
+    //暂时不需要这个依赖了
+//    def compileKeword = "compile 'com.antfortune.freeline:runtime:0.6.3'"
+//    handleData(modelBuildGradleFilePath, compileKeword, "dependencies", "compile fileTree", false)
 
     //在 model 里面插入需要的代码
+//    def freelineKeword = '''
+//    freeline {
+//        hack true
+//    }
+//    '''
+
+//    //专门针对聚美
     def freelineKeword = '''
     freeline {
         hack true
     }
     '''
-
-//    //专门针对聚美
-//    def freelineKeword = '''
-//    def flavor = "jmtest"
-//
-//    version = android.defaultConfig.versionCode
-//
-//    freeline {
-//        productFlavor flavor
-//        hack true
-//
-//        def dir = System.getProperty("user.dir");
-//        apkPath dir + "/ExportApks/"+ flavor + "_" + version + ".apk"
-//    }
-//    '''
-    handleData(modelBuildGradleFilePath, freelineKeword, "apply plugin", "android {", false)
+    handleData(modelBuildGradleFilePath, freelineKeword, "useLibrary", "}", true)
 
     //在modle 的依赖中添加 apply 插件
     def applyKeword = "apply plugin: 'com.antfortune.freeline'"
-    handleData(modelBuildGradleFilePath, applyKeword, "apply plugin", "android {", true)
+    handleData(modelBuildGradleFilePath, applyKeword, "apply plugin", "apply plugin", true)
 }
 
 /**
@@ -295,15 +291,12 @@ def modelBuildGradleFile = { String modelBuildGradleFilePath ->
 private void preLog(boolean isDebug, long pre, String myApplicationPath, String myModleBuildPath, String myRootBuildPath) {
     if (isDebug)
         println("时间差是:" + (System.currentTimeMillis() - pre))
-    println ""
-    println ""
-    println ""
-    println "( ⊙o⊙ )哇 找到 Application 的路径: $myApplicationPath"
-    println "( ⊙o⊙ )哇 找到 modle 目录下的build.gradle 文件路径: $myModleBuildPath"
-    println "( ⊙o⊙ )哇 找到 root 目录下的build.gradle 文件路径: $myRootBuildPath"
-    println ""
-    println ""
-    println ""
+
+    println '   ------------------------------------------------------------------------------------------------'
+    println '       ( ⊙o⊙ )哇 找到 Application 的路径: ' + myApplicationPath
+    println '       ( ⊙o⊙ )哇 找到 modle 目录下的build.gradle 文件路径: ' + myModleBuildPath
+    println '       ( ⊙o⊙ )哇 找到 root 目录下的build.gradle 文件路径: ' + myRootBuildPath
+    println '   ------------------------------------------------------------------------------------------------'
 }
 
 /**
@@ -322,13 +315,13 @@ private boolean isEmpty(String str) {
  * 结束的 log
  */
 private void endLog() {
-    println ""
-    println ""
-    println ""
-    println "~~~^_^~~~  已经将 Freeline 插入到项目中，请享用吧 ~~~^_^~~~ "
-    println ""
-    println ""
-    println ""
+    println '''
+
+    ------------------------------------------------------------------------------------------------
+        ~~~^_^~~~  已经将 Freeline 插入到项目中，请享用吧 ~~~^_^~~~
+    ------------------------------------------------------------------------------------------------
+
+    '''
 }
 
 /**
@@ -340,9 +333,17 @@ private void endLog() {
 try {
     String path = localProperties(debugPathFile).get(0)
     isDebug = path.contains("true")
-    println "欢迎使用 freeline 快速集成脚本, 这是 Debug 版本，可以根据下面的提示信息进行调试。"
+    println '''
+    ------------------------------------------------------------------------------------------------
+        欢迎使用 freeline 快速集成脚本, 这是 Debug 版本，可以根据下面的提示信息进行调试。
+    ------------------------------------------------------------------------------------------------
+    '''
 } catch (Exception e) {
-    println "欢迎使用 freeline 快速集成脚本"
+    println '''
+    ------------------------------------------------------------------------------------------------
+        欢迎使用 freeline 快速集成脚本
+    ------------------------------------------------------------------------------------------------
+    '''
     isDebug = false
 }
 
@@ -352,10 +353,19 @@ try {
     String path = localProperties(proPathFile).get(0)
     rootPath = path.trim()
 } catch (Exception e) {
-    println "读取配置文件失败，请在当前文件目录放入 your_pro_path.properties(没有请自建文件) 文件，并在里面写入当前项目的绝对路径，否则将会自动寻找项目路径（比较重要，如果不配置项目地址，请把这些文件放在你的项目的跟目录下面）"
+    println '''
+    ------------------------------------------------------------------------------------------------
+        读取配置文件失败，请在当前文件目录放入 your_pro_path.properties(没有请自建文件) 文件，
+        在里面写入当前项目的绝对路径，否则将会自动寻找项目路径
+        （比较重要，如果不配置项目地址，请把这些文件放在你的项目的跟目录下面）
+    ------------------------------------------------------------------------------------------------
+    '''
     rootPath = currentPath
 }
-println "当前项目的真实路径是： $rootPath"
+
+println "   ------------------------------------------------------------------------------------------------"
+println "       当前项目的真实路径是： $rootPath"
+println "   ------------------------------------------------------------------------------------------------"
 
 File dir = new File(rootPath)
 rootParentName = dir.getName()
@@ -364,7 +374,15 @@ ArrayList dirBlackList = new ArrayList()
 try {
     dirBlackList = localProperties(excludeDirFile)
 } catch (Exception e) {
-    println "（可以忽略）读取配置文件失败，请在当前文件目录放入 exclude_dir.properties (没有请自建文件)文件，并在里面写入需要忽略的文件，否则会使用默认忽略配置属性"
+
+
+    println '''
+    ------------------------------------------------------------------------------------------------
+        （可以忽略）
+        读取配置文件失败，请在当前文件目录放入 exclude_dir.properties (没有请自建文件)文件，
+        并在里面写入需要忽略的文件，否则会使用默认忽略配置属性
+    ------------------------------------------------------------------------------------------------
+    '''
 } finally {
     dirBlackList.addAll(getBlackList())
 }
@@ -388,18 +406,28 @@ modelBuildGradleFile(myModleBuildPath)
 
 endLog()
 
+println '''
+    ------------------------------------------------------------------------------------------------
+        开始执行命令：gradle initFreeline -Pmirror。 客官，莫要着急哦，请耐心等待一小会，就会完成。
+    ------------------------------------------------------------------------------------------------
+'''
 
-println "开始执行命令：gradle initFreeline -Pmirror。 客官，莫要着急哦，请耐心等待一小会，就会完成。"
+println ""
 def cmd = "gradle initFreeline -Pmirror"
 println cmd.execute().text
 
 
 def warningText = '''
-温馨提示：
+    ------------------------------------------------------------------------------------------------
+                                        温馨提示：
 
-    ~~~^_^~~~
 
-如果提示 BUILD FAILED ，         %>_<%   请使用 gradle initFreeline -Pmirror 或者 gradle initFreeline 再次运行一次即可。
-如果提示 BUILD SUCCESSFUL ，     #^_^#   表示初始化 freeline 成功，请使用 python freeline.py 运行项目。 或者可以使用插件运行
+                                        ~~~^_^~~~
+
+
+
+        如果提示 BUILD FAILED ，         %>_<%   请使用 gradle initFreeline -Pmirror 或者 gradle initFreeline 再次运行一次即可。
+        如果提示 BUILD SUCCESSFUL ，     #^_^#   表示初始化 freeline 成功，请使用 python freeline.py 运行项目。 或者可以使用插件运行
+    ------------------------------------------------------------------------------------------------
 '''
 println warningText
