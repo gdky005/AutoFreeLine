@@ -28,6 +28,8 @@ CharSequence myModleBuildPath = ""
 @Field
 CharSequence myRootBuildPath = ""
 @Field
+CharSequence freelineChar = "com.antfortune.freeline"
+@Field
 boolean isDebug = false
 /**
  * 当前运行路径
@@ -194,7 +196,8 @@ def handleData = { String filePath, String addDataLine,
 
                 line = list.get(insertLine - 1)
 
-                if (!line.contains(addDataLine)) {
+//                && !currentLine.contains(freelineChar)  可以保留之前的，新的不加入
+                if (!line.contains(addDataLine) ) {
 
                     int index = line.indexOf(checkKeyword)
                     if (index >= 0) space = line.substring(0, index);
@@ -235,7 +238,7 @@ def handleData = { String filePath, String addDataLine,
  * 给根目录下的build.gradle 文件插入相关数据
  */
 def rootBuildFile = { String rootBuildFilePath ->
-    String classpathKeyword = "classpath 'com.antfortune.freeline:gradle:0.6.0'"
+    String classpathKeyword = "classpath 'com.antfortune.freeline:gradle:0.6.3'"
     handleData(rootBuildFilePath, classpathKeyword, "dependencies", "classpath", false)
 }
 
@@ -253,8 +256,9 @@ def modelApplicationFile = { String modelApplicationFilePath ->
  * 插入 model 的依赖
  */
 def modelBuildGradleFile = { String modelBuildGradleFilePath ->
-    def compileKeword = "compile 'com.antfortune.freeline:runtime:0.6.0'"
-    handleData(modelBuildGradleFilePath, compileKeword, "dependencies", "compile fileTree", false)
+    //暂时不需要这个依赖了
+//    def compileKeword = "compile 'com.antfortune.freeline:runtime:0.6.3'"
+//    handleData(modelBuildGradleFilePath, compileKeword, "dependencies", "compile fileTree", false)
 
     //在 model 里面插入需要的代码
 //    def freelineKeword = '''
@@ -267,14 +271,9 @@ def modelBuildGradleFile = { String modelBuildGradleFilePath ->
     def freelineKeword = '''
     def flavorName = "jmtest"
 
-    def apkVersionCode = android.defaultConfig.versionCode
-
     freeline {
         productFlavor flavorName
         hack true
-
-        def dir = System.getProperty("user.dir");
-        apkPath dir + "/ExportApks/"+ flavorName + "_" + apkVersionCode + ".apk"
     }
     '''
     handleData(modelBuildGradleFilePath, freelineKeword, "useLibrary", "}", true)
@@ -297,9 +296,9 @@ private void preLog(boolean isDebug, long pre, String myApplicationPath, String 
         println("时间差是:" + (System.currentTimeMillis() - pre))
 
     println '   ------------------------------------------------------------------------------------------------'
-    println '       ( ⊙o⊙ )哇 找到 Application 的路径: $myApplicationPath'
-    println '       ( ⊙o⊙ )哇 找到 modle 目录下的build.gradle 文件路径: $myModleBuildPath'
-    println '       ( ⊙o⊙ )哇 找到 root 目录下的build.gradle 文件路径: $myRootBuildPath'
+    println '       ( ⊙o⊙ )哇 找到 Application 的路径: ' + myApplicationPath
+    println '       ( ⊙o⊙ )哇 找到 modle 目录下的build.gradle 文件路径: ' + myModleBuildPath
+    println '       ( ⊙o⊙ )哇 找到 root 目录下的build.gradle 文件路径: ' + myRootBuildPath
     println '   ------------------------------------------------------------------------------------------------'
 }
 
