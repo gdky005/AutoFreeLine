@@ -8,14 +8,15 @@ package wq.gdky005
 
 def proDir = "/Users/WangQing/Android_Pro/JuMeiYouPin_Pro/LocalMavenDemo"
 def mainModule = "/app"
-def gradleProperties = "gradle.properties"
+def libModule = "/lib"
+def gradleProperties = "/gradle.properties"
 
 //-----------------------------------GAV-start------------------------------------------------------------------------------------
 def projectStr = "project"
 def libName = "lib"
 
 def props = new Properties()
-new File(proDir + "/" + gradleProperties).withInputStream {
+new File(proDir + libModule + gradleProperties).withInputStream {
     stream -> props.load(stream)
 }
 def group = props.getProperty("GROUP_ID")
