@@ -8,16 +8,19 @@ package wq.gdky005
 
 def proDir = "/Users/WangQing/Android_Pro/JuMeiYouPin_Pro/LocalMavenDemo"
 def mainModule = "/app"
-
+def gradleProperties = "gradle.properties"
 
 //-----------------------------------GAV-start------------------------------------------------------------------------------------
 def projectStr = "project"
 def libName = "lib"
 
-
-def group = "com.gdky005"
-def artifact = "wq"
-def version = "1.0.13"
+def props = new Properties()
+new File(proDir + "/" + gradleProperties).withInputStream {
+    stream -> props.load(stream)
+}
+def group = props.getProperty("GROUP_ID")
+def artifact = props.getProperty("ARTIFACT_ID")
+def version = props.getProperty("VERSION")
 
 def GAV = group + ":" + artifact + ":" + version
 def libGAV = "\timplementation '" + GAV + "'"
