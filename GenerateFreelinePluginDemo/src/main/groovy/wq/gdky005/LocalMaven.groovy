@@ -7,8 +7,13 @@ package wq.gdky005
 //}
 
 def proDir = "/Users/WangQing/Android_Pro/JuMeiYouPin_Pro/LocalMavenDemo"
-currentPath = proDir
-def isDebug = true
+def mainModule = "/app"
+
+
+//-----------------------------------GAV-start------------------------------------------------------------------------------------
+def projectStr = "project"
+def libName = "lib"
+
 
 def group = "com.gdky005"
 def artifact = "wq"
@@ -16,16 +21,23 @@ def version = "1.0.13"
 
 def GAV = group + ":" + artifact + ":" + version
 def libGAV = "\timplementation '" + GAV + "'"
-
-def projectStr = "project"
-def libName = "lib"
+//----------------------------------GAV-end------------------------------------------------------------------------------------
 
 
-// 运行本地命令
+
+
+//----------------------------------local cmd--start----------------------------------------------------------------------
+//运行本地命令
+
 def gradlePublishCMD = "gradle uploadArchives"
 //def gradlePublishCMD = "gradle clean"
 //def gradlePublishCMD = "gradle build"
 //System.out.println(System.getProperty("user.dir"))
+
+//----------------------------------local cmd--end------------------------------------------------------------------------
+
+
+currentPath = proDir
 
 println("项目目录是：" + proDir)
 
@@ -60,8 +72,8 @@ println(publish.text)
 //
 //localProperties("app")
 
-List<String> list = new ArrayList<>();
-new File(currentPath + "/app").eachFileMatch(~/.*\.gradle/) { file ->
+List<String> list = new ArrayList<>()
+new File(currentPath + mainModule).eachFileMatch(~/.*\.gradle/) { file ->
     println "当前文件名：" + file.getName()
 
     def i = 0
@@ -69,6 +81,7 @@ new File(currentPath + "/app").eachFileMatch(~/.*\.gradle/) { file ->
     def gavNum = 0
     def projectNum = 0
 
+    // 查询 位置
     file.eachLine { line ->
         println line
         ++i
@@ -91,6 +104,8 @@ new File(currentPath + "/app").eachFileMatch(~/.*\.gradle/) { file ->
     println "当前的" + GAV + "是第 " + gavNum + " 行"
     println "当前的" + "project:lib" + "是第 " + projectNum + " 行"
 
+
+    //插入数据
     if (gavNum > 0) { //说明存在，只修改版本号
         int number = gavNum - 1
         def gavStr = list.get(number)
@@ -112,7 +127,18 @@ new File(currentPath + "/app").eachFileMatch(~/.*\.gradle/) { file ->
     // 将 list 写入到原始文件中
     println(list.toString())
 
-    File newFile = new File(file.getPath())
+    write2File(file.getPath(), list)
+
+}
+
+/**
+ * 将 List 写入到 文件中
+ *
+ * @param file
+ * @param list
+ */
+private static void write2File(String file, List<String> list) {
+    File newFile = new File(file)
 
     if (!newFile.exists())
         newFile.createNewFile()
@@ -122,5 +148,4 @@ new File(currentPath + "/app").eachFileMatch(~/.*\.gradle/) { file ->
             out.println(list.get(k))
         }
     }
-
 }
