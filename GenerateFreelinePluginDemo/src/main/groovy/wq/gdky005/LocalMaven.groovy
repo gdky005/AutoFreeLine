@@ -254,6 +254,7 @@ mainModule = null
 modulePath = [
         "/addcart_lib",
         "/bizlib/uiwidget",
+        "/buyflow/buyflownet",
 ] as String[]
 operationLocalMaven(modulePath, proDir, mainModule)
 
