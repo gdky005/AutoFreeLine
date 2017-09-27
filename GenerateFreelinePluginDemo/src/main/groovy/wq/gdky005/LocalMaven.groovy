@@ -235,37 +235,83 @@ modulePath = [
         "/bizlib/resources",
         "/bizlib/protocol",
         "/jmavlib",
+        "/jmvideolibs",
+        "/refreshview",
+        "/usercenter/loginbiz",
 ] as String[]
 
 operationLocalMaven(modulePath, proDir, mainModule)
-//
-///**
-// * 第二组
-// */
-//mainModule = null
-//modulePath = [
-//        "/baselib",
-//] as String[]
-//operationLocalMaven(modulePath, proDir, mainModule)
-//
-///**
-// * 第三组
-// */
-//mainModule = null
-//modulePath = [
-//        "/addcart_lib",
-//        "/bizlib/uiwidget",
-//        "/buyflow/buyflownet",
-//] as String[]
-//operationLocalMaven(modulePath, proDir, mainModule)
-//
-//
-///**
-// * 第四组
-// */
-//mainModule = null
-//modulePath = [
-//        "/buyflow/paylib",
-//] as String[]
-//operationLocalMaven(modulePath, proDir, mainModule)
+
+/**
+ * 第二组
+ */
+mainModule = null
+modulePath = [
+        "/baselib",
+        "/jmvdplayer",
+        "/launchernumtoast",
+] as String[]
+operationLocalMaven(modulePath, proDir, mainModule)
+
+/**
+ * 第三组
+ */
+mainModule = null
+modulePath = [
+        "/addcart_lib",
+        "/bizlib/uiwidget",
+        "/buyflow/buyflownet",
+] as String[]
+operationLocalMaven(modulePath, proDir, mainModule)
+
+
+/**
+ * 第四组
+ */
+mainModule = null
+modulePath = [
+        "/storage_lib",
+        "/buyflow/paylib",
+        "/usercenter/usercenterlib",
+] as String[]
+operationLocalMaven(modulePath, proDir, mainModule)
+
+/**
+ * 第五组
+ */
+mainModule = null
+modulePath = [
+        "/web/web_lib",
+        "/usercenter/usercenterbiz",
+] as String[]
+operationLocalMaven(modulePath, proDir, mainModule)
+
+
+/**
+ * 第六组
+ */
+mainModule = null
+modulePath = [
+        "/share_lib",
+        "/buyflow/buyflowbiz",
+] as String[]
+operationLocalMaven(modulePath, proDir, mainModule)
+
+/**
+ * 第七组
+ */
+mainModule = null
+modulePath = [
+        "/beautiful_list/list_common",
+] as String[]
+operationLocalMaven(modulePath, proDir, mainModule)
+
+/**
+ * 第八组
+ */
+mainModule = null
+modulePath = [
+        "/beautiful_list/list_biz",
+] as String[]
+operationLocalMaven(modulePath, proDir, mainModule)
 
