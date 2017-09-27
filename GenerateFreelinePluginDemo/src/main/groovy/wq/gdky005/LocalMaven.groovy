@@ -222,10 +222,10 @@ def proDir = "/Users/WangQing/mobile_android/JuMeiYouPin"
  * 第一组
  */
 //需要替换的 module 中包含 project,可以自动替换
-mainModule = [
-        "/bizlib/uiwidget",
-        "/baselib",
-] as String[]
+//mainModule = [
+//        "/bizlib/uiwidget",
+//        "/baselib",
+//] as String[]
 
 //需要打包，发布到本地仓库。
 // 1. 务必修改该 Lib 里面的 build.gradle， 添加 apply from 相关属性。
@@ -234,37 +234,38 @@ modulePath = [
         "/JuMeiUI",
         "/bizlib/resources",
         "/bizlib/protocol",
+        "/jmavlib",
 ] as String[]
 
 operationLocalMaven(modulePath, proDir, mainModule)
-
-/**
- * 第二组
- */
-mainModule = null
-modulePath = [
-        "/baselib",
-] as String[]
-operationLocalMaven(modulePath, proDir, mainModule)
-
-/**
- * 第三组
- */
-mainModule = null
-modulePath = [
-        "/addcart_lib",
-        "/bizlib/uiwidget",
-        "/buyflow/buyflownet",
-] as String[]
-operationLocalMaven(modulePath, proDir, mainModule)
-
-
-/**
- * 第四组
- */
-mainModule = null
-modulePath = [
-        "/buyflow/paylib",
-] as String[]
-operationLocalMaven(modulePath, proDir, mainModule)
+//
+///**
+// * 第二组
+// */
+//mainModule = null
+//modulePath = [
+//        "/baselib",
+//] as String[]
+//operationLocalMaven(modulePath, proDir, mainModule)
+//
+///**
+// * 第三组
+// */
+//mainModule = null
+//modulePath = [
+//        "/addcart_lib",
+//        "/bizlib/uiwidget",
+//        "/buyflow/buyflownet",
+//] as String[]
+//operationLocalMaven(modulePath, proDir, mainModule)
+//
+//
+///**
+// * 第四组
+// */
+//mainModule = null
+//modulePath = [
+//        "/buyflow/paylib",
+//] as String[]
+//operationLocalMaven(modulePath, proDir, mainModule)
 
