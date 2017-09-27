@@ -258,3 +258,13 @@ modulePath = [
 ] as String[]
 operationLocalMaven(modulePath, proDir, mainModule)
 
+
+/**
+ * 第四组
+ */
+mainModule = null
+modulePath = [
+        "/buyflow/paylib",
+] as String[]
+operationLocalMaven(modulePath, proDir, mainModule)
+
